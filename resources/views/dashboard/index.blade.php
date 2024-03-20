@@ -1,6 +1,10 @@
 @extends('layout.dashboard')
 
 @section('title','Starter Page')
+@section('breadcrumb')
+    @parent
+    <li class="breadcrumb-item active"><a href="#">Starter Page</a></li>
+@endsection
 @section('content')
     <!-- Main content -->
     <div class="content">
