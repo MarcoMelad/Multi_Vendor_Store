@@ -1,4 +1,4 @@
-# Simple Post's Website [ Posts - Posts Ber Users type - Users ]
+# Multi Vendor Store
 
 
 ## BY
