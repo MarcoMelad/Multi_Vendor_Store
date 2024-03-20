@@ -9,7 +9,7 @@
 
 # Requirments:
 
-- PHP 8.1 or later.
+- PHP 8.0.
 - MySQL 5.7 or later.
 
 ## installation
