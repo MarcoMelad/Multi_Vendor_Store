@@ -1,4 +1,4 @@
-# Multi Vendor Store
+# Multi Vendor Store Website
 
 
 ## BY
@@ -20,6 +20,8 @@ after clone/ download the project file, `cd` into the project directory and foll
 - if you don't see the `.env` file please do the following:
     - run `cp .env.example .env` to copy env file.
     - run `php artisan key:generate` to generate new app key.
+    - run `npm install` to generate new app key.
+    - run `npm run dev` to generate new app key.
 - run `php artisan migrate` to run database migration.
 - run `php artisan db:seed` to run database seeds.
 - run `php artisan serve`   to run project.
