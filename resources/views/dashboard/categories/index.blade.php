@@ -33,7 +33,7 @@
         @forelse($categories as $category)
             <tr>
                 <td></td>
-                <td>{{$category->id}}</td>
+                <td>{{$loop->index+1}}</td>
                 <td>{{$category->name}}</td>
                 <td>{{$category->parent_id}}</td>
                 <td>{{$category->created_at}}</td>
