@@ -24,6 +24,7 @@
             <th>ID</th>
             <th>Name</th>
             <th>Parent</th>
+            <th>Image</th>
             <th>Created At</th>
             <th colspan="2"></th>
         </tr>
@@ -36,6 +37,7 @@
                 <td>{{$loop->index+1}}</td>
                 <td>{{$category->name}}</td>
                 <td>{{$category->parent_id}}</td>
+                <td>{{$category->image}}</td>
                 <td>{{$category->created_at}}</td>
                 <td>
                     <a href="{{route('categories.edit', $category->id)}}" class="btn btn-sm btn-outline-success">Edit</a>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -24,13 +25,8 @@ class CategoriesController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        $request->validate([
-            'name' => 'required|max:255',
-            'status' => 'required'
-        ]);
-
         Category::create([
             'name' => $request->name,
             'parent_id' => $request->parent_id,
@@ -48,19 +44,17 @@ class CategoriesController extends Controller
     {
         $category = Category::findOrFail($id);
         $parents = Category::where('id', '<>', $id)
-            ->where(function ($query) use($id){
-                $query->whereNull('parent_id')->orwhere('parent_id','<>',$id);
+            ->where(function ($query) use ($id) {
+                $query->whereNull('parent_id')->orwhere('parent_id', '<>', $id);
             })->get();
 
         return view('dashboard.categories.edit', compact('category', 'parents'));
     }
 
 
-    public function update(Request $request, $id)
+    public function update(CategoryRequest $request, $id)
     {
         try {
-
-
             $category = Category::findOrFail($id);
 
             $category->update([
@@ -71,6 +65,7 @@ class CategoriesController extends Controller
                 'status' => $request->status,
                 'slug' => Str::slug($request->name)
             ]);
+
             return redirect()->route('categories.index')->with('success', 'Category Updated Successfully!');
         } catch (\Exception $e) {
             return back()->withError($e->getMessage());
