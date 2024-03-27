@@ -13,7 +13,17 @@ class CategoriesController extends Controller
 
     public function index()
     {
-        $categories = Category::paginate(5);
+        $request = request();
+        $query = Category::query();
+
+        if ($name = $request->query('name')) {
+            $query->where('name', 'LIKE', "%{$name}%");
+        }
+        if ($status = $request->query('status')) {
+            $query->where('status', '=',$status);
+        }
+
+        $categories = $query->paginate(2);
         return view('dashboard.categories.index', compact('categories'));
     }
 
@@ -31,7 +41,7 @@ class CategoriesController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = $image->getClientOriginalName();
-            $image->storeAs('public/images', $imageName,'upload_attachments');
+            $image->storeAs('public/images', $imageName, 'upload_attachments');
         }
 
         Category::create([
@@ -50,9 +60,9 @@ class CategoriesController extends Controller
 
     public function edit($id)
     {
-        try{
+        try {
             $category = Category::findOrFail($id);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return redirect()->route('categories.index')->with('info', 'Category Not Found!');
         }
         $parents = Category::where('id', '<>', $id)

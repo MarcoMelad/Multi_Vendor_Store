@@ -27,7 +27,7 @@ class CategoryRequest extends FormRequest
         return [
             'name' => 'required|string|min:3|max:255|unique:categories,name',
             'parent_id' => 'nullable|int|exists:categories,id',
-            'image' => 'image|max:1048576',
+            'image' => 'max:1048576',
             'status' => 'required|in:active,archived',
             new NameFilter(['laravel', 'html', 'php']),
         ];
