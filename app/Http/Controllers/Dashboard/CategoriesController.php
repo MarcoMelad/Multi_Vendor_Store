@@ -5,15 +5,15 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Mockery\Exception;
 
 class CategoriesController extends Controller
 {
 
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::paginate(5);
         return view('dashboard.categories.index', compact('categories'));
     }
 
@@ -27,14 +27,22 @@ class CategoriesController extends Controller
 
     public function store(CategoryRequest $request)
     {
+        $imageName = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = $image->getClientOriginalName();
+            $image->storeAs('public/images', $imageName,'upload_attachments');
+        }
+
         Category::create([
             'name' => $request->name,
             'parent_id' => $request->parent_id,
             'description' => $request->description,
-            'image' => $request->image,
+            'image' => $imageName,
             'status' => $request->status,
             'slug' => Str::slug($request->name)
         ]);
+
         return redirect()->route('categories.index')->with('success', 'Category Created Successfully!');
 
     }
@@ -42,7 +50,11 @@ class CategoriesController extends Controller
 
     public function edit($id)
     {
-        $category = Category::findOrFail($id);
+        try{
+            $category = Category::findOrFail($id);
+        }catch (\Exception $e){
+            return redirect()->route('categories.index')->with('info', 'Category Not Found!');
+        }
         $parents = Category::where('id', '<>', $id)
             ->where(function ($query) use ($id) {
                 $query->whereNull('parent_id')->orwhere('parent_id', '<>', $id);
@@ -56,7 +68,6 @@ class CategoriesController extends Controller
     {
         try {
             $category = Category::findOrFail($id);
-
             $category->update([
                 'name' => $request->name,
                 'parent_id' => $request->parent_id,

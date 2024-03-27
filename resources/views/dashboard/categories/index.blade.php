@@ -11,12 +11,8 @@
     <div class="mb-5 ml-3">
         <a href="{{route('categories.create')}}" class="btn btn-sm btn-outline-primary">Create</a>
     </div>
-
-    @if(session()->has('success'))
-        <div class="alert alert-success">
-            {{session('success')}}
-        </div>
-    @endif
+    <x-alert type="success"/>
+    <x-alert type="info"/>
     <table class="table">
         <thead>
         <tr>
@@ -24,7 +20,6 @@
             <th>ID</th>
             <th>Name</th>
             <th>Parent</th>
-            <th>Image</th>
             <th>Created At</th>
             <th colspan="2"></th>
         </tr>
@@ -33,11 +28,10 @@
 
         @forelse($categories as $category)
             <tr>
-                <td></td>
+                <td><img src="{{asset('storage/'. $category->image)}}" alt="" height="50"></td>
                 <td>{{$loop->index+1}}</td>
                 <td>{{$category->name}}</td>
                 <td>{{$category->parent_id}}</td>
-                <td>{{$category->image}}</td>
                 <td>{{$category->created_at}}</td>
                 <td>
                     <a href="{{route('categories.edit', $category->id)}}" class="btn btn-sm btn-outline-success">Edit</a>
@@ -57,4 +51,6 @@
         @endforelse
         </tbody>
     </table>
+
+    {{ $categories->links() }}
 @endsection
