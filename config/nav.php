@@ -16,7 +16,7 @@ return [
     ],
     [
         'icon' => 'nav-icon fas fa-tachometer-alt',
-        'route' => 'categories.index',
+        'route' => 'products.index',
         'title' => 'Products',
         'active' => 'products.*'
     ],

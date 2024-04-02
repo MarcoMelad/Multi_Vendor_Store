@@ -10,7 +10,7 @@
     {{$attributes->class([
         'form-control',
         'is-invalid' => $errors->has($name)
-    ])}} />
+    ])}}/>
 @error($name)
 <div class="invalid-feedback">
     {{ $message }}

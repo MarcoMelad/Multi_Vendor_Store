@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 use Mockery\Exception;
 
@@ -14,19 +15,31 @@ class CategoriesController extends Controller
     public function index()
     {
         $request = request();
-        $query = Category::query();
 
-        if ($name = $request->query('name')) {
-            $query->where('name', 'LIKE', "%{$name}%");
-        }
-        if ($status = $request->query('status')) {
-            $query->where('status', '=',$status);
-        }
 
-        $categories = $query->paginate(2);
+        //$categories = Category::active()->paginate(5);
+        //$categories = Category::status('archived')->paginate(5);
+        $categories = Category::with('parent')/*leftJoin('categories as parents', 'parents.id', '=', 'categories.parent_id')
+            ->select([
+                'categories.*',
+                'parents.name as parent_name'
+            ])*/
+        ->withCount([
+            'products' => function ($query) {
+                $query->where('status','=','active');
+            }
+        ])
+            ->filter($request->query())->paginate(10);
         return view('dashboard.categories.index', compact('categories'));
     }
 
+
+    public function show(Category $category)
+    {
+        return view('dashboard.categories.show',[
+            'category' => $category
+        ]);
+    }
 
     public function create()
     {
@@ -94,9 +107,32 @@ class CategoriesController extends Controller
     }
 
 
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        Category::findOrFail($id)->delete();
+        //Category::findOrFail($id)->delete();
+        $category->delete();
         return redirect()->route('categories.index')->with('success', 'Category Deleted Successfully!');
+    }
+
+    public function trash()
+    {
+        $categories = Category::onlyTrashed()->paginate();
+        return view('dashboard.categories.trash', compact('categories'));
+    }
+
+    public function restore(Request $request, $id)
+    {
+        $category = Category::onlyTrashed()->findOrFail($id);
+        $category->restore();
+
+        return redirect()->route('categories.trash')->with('success', 'Category Restored Successfully!');
+    }
+
+    public function forceDelete($id)
+    {
+        $category = Category::onlyTrashed()->findOrFail($id);
+        $category->forceDelete();
+
+        return redirect()->route('categories.trash')->with('success', 'Category Deleted Permanently!');
     }
 }

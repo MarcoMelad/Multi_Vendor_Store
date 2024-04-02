@@ -10,7 +10,8 @@
 
 @section('content')
     <div class="mb-5 ml-3">
-        <a href="{{route('categories.create')}}" class="btn btn-sm btn-outline-primary">Create</a>
+        <a href="{{route('categories.create')}}" class="btn btn-sm btn-outline-primary mr-2">Create</a>
+        <a href="{{route('categories.trash')}}" class="btn btn-sm btn-outline-dark">Trash</a>
     </div>
     <x-alert type="success"/>
     <x-alert type="info"/>
@@ -32,6 +33,7 @@
             <th>ID</th>
             <th>Name</th>
             <th>Parent</th>
+            <th>Products #</th>
             <th>Status</th>
             <th>Created At</th>
             <th colspan="2"></th>
@@ -43,8 +45,9 @@
             <tr>
                 <th></th>
                 <td>{{$loop->index+1}}</td>
-                <td>{{$category->name}}</td>
-                <td>{{$category->parent_id}}</td>
+                <td><a href="{{ route('categories.show', $category->id) }}">{{$category->name}}</a></td>
+                <td>{{$category->parent->name}}</td>
+                <td>{{$category->products_count}}</td>
                 <td>{{$category->status}}</td>
                 <td>{{$category->created_at}}</td>
                 <td>
@@ -61,11 +64,11 @@
             </tr>
         @empty
             <tr>
-                <td colspan="7">No Categories Defined.</td>
+                <td colspan="8">No Categories Defined.</td>
             </tr>
         @endforelse
         </tbody>
     </table>
 
-    {{ $categories->withQueryString()->links() }}
+    {{ $categories->withQueryString()->appends(['search'=>1])->links() }}
 @endsection
