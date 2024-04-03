@@ -34,7 +34,7 @@ class CartRepository implements CartRepositoryInterface
                 'product_id' => $product->id,
                 'quantity' => $quantity,
             ]);
-            $this->get()->push($cart);
+            return $this->get()->push($cart);
         }
 
         return $item->increment('quantity', $quantity);
@@ -60,9 +60,6 @@ class CartRepository implements CartRepositoryInterface
 
     public function total(): float
     {
-        /*return (float)Cart::join('products', 'products.id', '=', 'carts.product_id')
-            ->selectRaw('SUM(products.price * carts.quantity) as total')->value('total');*/
-
         return $this->get()->sum(function ($item) {
             return $item->quantity * $item->product->price;
         });

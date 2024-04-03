@@ -22,6 +22,7 @@ class CartController extends Controller
             'cart' => $this->cartRepository,
         ]);
     }
+
     public function show()
     {
 
@@ -40,24 +41,22 @@ class CartController extends Controller
     }
 
 
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
         $request->validate([
-            'product_id' => 'required|int|exists:products,id',
-            'quantity' => 'nullable|int|min:1'
+            'quantity' => 'required|int|min:1'
         ]);
 
-        $product = Product::findOrFail($request->post('product_id'));
-        $this->cartRepository->update($product, $request->post('quantity'));
-        return $this->cartRepository->update($product, $request->post('quantity'));
+        $this->cartRepository->update($id, $request->post('quantity'));
     }
 
 
     public function destroy($id)
     {
         $this->cartRepository->delete($id);
-
-        return redirect()->route('cart.index')->with('warning', 'Product Deleted!');
+        return [
+            'message' => 'Product Deleted!'
+        ];
     }
 
 }

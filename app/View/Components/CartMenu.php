@@ -2,10 +2,13 @@
 
 namespace App\View\Components;
 
+use App\Facades\Cart;
 use Illuminate\View\Component;
 
 class CartMenu extends Component
 {
+    public $items;
+    public $total;
     /**
      * Create a new component instance.
      *
@@ -13,7 +16,8 @@ class CartMenu extends Component
      */
     public function __construct()
     {
-        //
+        $this->items = Cart::get();
+        $this->total = Cart::total();
     }
 
     /**
