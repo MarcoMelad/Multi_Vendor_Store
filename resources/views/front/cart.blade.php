@@ -48,17 +48,17 @@
                 </div>
                 <!-- End Cart List Title -->
                 <!-- Cart Single List list -->
-                @foreach($cart as $cart)
+                @foreach($cart->get() as $item)
                     <div class="cart-single-list">
                         <div class="row align-items-center">
                             <div class="col-lg-1 col-md-1 col-12">
-                                <a href="{{ route('product.show', $cart->product->slug) }}"><img
-                                        src="{{ $cart->product->image_url }}"
+                                <a href="{{ route('product.show', $item->product->slug) }}"><img
+                                        src="{{ $item->product->image_url }}"
                                         alt="#"></a>
                             </div>
                             <div class="col-lg-4 col-md-3 col-12">
-                                <h5 class="product-name"><a href="{{ route('product.show', $cart->product->slug) }}">
-                                        {{ $cart->product->name }}</a></h5>
+                                <h5 class="product-name"><a href="{{ route('product.show', $item->product->slug) }}">
+                                        {{ $item->product->name }}</a></h5>
                                 <p class="product-des">
                                     <span><em>Type:</em> Mirrorless</span>
                                     <span><em>Color:</em> Black</span>
@@ -66,11 +66,11 @@
                             </div>
                             <div class="col-lg-2 col-md-2 col-12">
                                 <div class="count-input">
-                                    <input class="form-control" name="quantity" value="{{ $cart->quantity }}">
+                                    <input class="form-control" name="quantity" value="{{ $item->quantity }}">
                                 </div>
                             </div>
                             <div class="col-lg-2 col-md-2 col-12">
-                                <p>{{ Currency::format($cart->quantity * $cart->product->price) }}</p>
+                                <p>{{ Currency::format($item->quantity * $item->product->price) }}</p>
                             </div>
                             <div class="col-lg-2 col-md-2 col-12">
                                 <p>{{ Currency::format(0) }}</p>
@@ -103,7 +103,7 @@
                             <div class="col-lg-4 col-md-6 col-12">
                                 <div class="right">
                                     <ul>
-                                        <li>Cart Subtotal<span>{{ Currency::format($cartRepository->total()) }}</span></li>
+                                        <li>Cart Subtotal<span>{{ Currency::format($cart->total()) }}</span></li>
                                         <li>Shipping<span>Free</span></li>
                                         <li>You Save<span>$29.00</span></li>
                                         <li class="last">You Pay<span>$2531.00</span></li>

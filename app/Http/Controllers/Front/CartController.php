@@ -18,7 +18,13 @@ class CartController extends Controller
 
     public function index()
     {
-        return $this->cartRepository->get($this->cartRepository);
+        return view('front.cart', [
+            'cart' => $this->cartRepository,
+        ]);
+    }
+    public function show()
+    {
+
     }
 
     public function store(Request $request)
@@ -29,12 +35,12 @@ class CartController extends Controller
         ]);
 
         $product = Product::findOrFail($request->post('product_id'));
-        return $this->cartRepository->add($product,$request->post('quantity'));
+        $this->cartRepository->add($product, $request->post('quantity'));
+        return redirect()->route('cart.index')->with('success', 'Product Added To Cart!');
     }
 
 
-
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $request->validate([
             'product_id' => 'required|int|exists:products,id',
@@ -42,13 +48,16 @@ class CartController extends Controller
         ]);
 
         $product = Product::findOrFail($request->post('product_id'));
-        return $this->cartRepository->update($product,$request->post('quantity'));
+        $this->cartRepository->update($product, $request->post('quantity'));
+        return $this->cartRepository->update($product, $request->post('quantity'));
     }
 
 
     public function destroy($id)
     {
-        return $this->cartRepository->delete($id);
+        $this->cartRepository->delete($id);
+
+        return redirect()->route('cart.index')->with('warning', 'Product Deleted!');
     }
 
 }
