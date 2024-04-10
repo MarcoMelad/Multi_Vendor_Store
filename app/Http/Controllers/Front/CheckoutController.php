@@ -54,8 +54,8 @@ class CheckoutController extends Controller
                 }
             }
 
-            $cart->empty();
             DB::commit();
+            event('order.created');
             return redirect()->route('home')->with('success', 'Order placed successfully');
         } catch (\Exception $exception) {
             DB::rollBack();
