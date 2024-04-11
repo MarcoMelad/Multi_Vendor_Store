@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Events\OrderCreated;
 use App\Facades\Cart;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -24,7 +25,7 @@ class EmptyCart
      * @param  object  $event
      * @return void
      */
-    public function handle()
+    public function handle($event): void
     {
         Cart::empty();
     }
