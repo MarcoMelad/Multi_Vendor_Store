@@ -23,9 +23,13 @@ class DeductProductQuantity
 
     public function handle(OrderCreated $event): void
     {
-        $order = $event->order;
-        foreach ($order->products as $product) {
-            $product->decrement('quantity', $product->pivot->quantity);
+        try {
+            $order = $event->order;
+            foreach ($order->products as $product) {
+                $product->decrement('quantity', $product->pivot->quantity);
+            }
+        }catch (\Exception $exception){
+
         }
 
         /*foreach (Cart::get() as $item){
