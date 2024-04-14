@@ -30,7 +30,6 @@ class SendOrderCreatedNotification
     public function handle(OrderCreated $event)
     {
         $order = $event->order;
-
         //If There Is Only One Owner For Store
         $user = User::where('store_id', $order->store_id)->first();
         $user->notify(new OrderCreatedNotification($order));

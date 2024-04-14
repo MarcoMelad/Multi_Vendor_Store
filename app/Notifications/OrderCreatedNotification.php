@@ -54,11 +54,12 @@ class OrderCreatedNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        $addr = $this->order->billingAddress();
+        $addr = $this->order->billingAddress()->first();
+        $name = $addr->name;
         return (new MailMessage)
                     ->subject("New Order #{$this->order->number}")
                     ->greeting("Hello {$notifiable->name}")
-                    ->line("A New Order (#{$this->order->number}) Created By {$addr->name} From {$addr->country_name}.")
+                    ->line("A New Order (#{$this->order->number}) Created By {$name} From {$addr->country_name}.")
                     ->action('View Order', url('/dashboard'))
                     ->line('Thank you for using our application!');
     }

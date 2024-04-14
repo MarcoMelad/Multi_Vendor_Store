@@ -62,13 +62,12 @@ class CheckoutController extends Controller
                     $order->addresses()->create($address);
                 }
             }
-
             event(new OrderCreated($order));
             DB::commit();
             return redirect()->route('home')->with('success', 'Order placed successfully');
         } catch (\Exception $exception) {
             DB::rollBack();
-            dd($order);
+            dd(event(new OrderCreated($order)));
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
