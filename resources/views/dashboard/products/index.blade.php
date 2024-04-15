@@ -1,5 +1,5 @@
 @php use Illuminate\Support\Facades\URL; @endphp
-@extends('layout.dashboard')
+@extends('layouts.dashboard')
 
 @section('title', 'Products')
 

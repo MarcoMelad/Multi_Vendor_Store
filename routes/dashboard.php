@@ -7,8 +7,8 @@ use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
-    'prefix' => 'dashboard',
-    'middleware' => ['auth', 'check_type:admin,super-admin']
+    'prefix' => 'admin/dashboard',
+    'middleware' => ['auth:admin']
 ], function () {
     Route::get('profile',[ProfileController::class, 'edit'])->name('profile.edit');
 
