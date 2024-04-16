@@ -6,10 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductrResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
+
 class ProductsController extends Controller
 {
-
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum')->except(['index', 'show']);
+    }
     public function index(Request $request)
     {
         $product = product::filter($request->query())->with('category:id,name','store:id,name','tags:id,name')->paginate();
@@ -26,6 +30,13 @@ class ProductsController extends Controller
             'price' => 'required|numeric|min:0',
             'compare_price' => 'nullable|numeric|greater:price',
         ]);
+
+        $user = $request->user();
+        if (!$user->tokenCan('products.create')){
+            return response()->json([
+                'message' => 'Unauthorized'
+            ],403);
+        };
 
         $product = Product::create($request->all());
         return response()->json($product,201);
@@ -46,12 +57,26 @@ class ProductsController extends Controller
             'price' => 'sometimes|required|numeric|min:0',
             'compare_price' => 'nullable|numeric|greater:price',
         ]);
+
+        $user = $request->user();
+        if (!$user->tokenCan('products.update')){
+            return response()->json([
+                'message' => 'Unauthorized'
+            ],403);
+        };
+
         $product->update($request->all());
         return response()->json($product);
     }
 
     public function destroy($id)
     {
+        $user = Auth::user();
+        if (!$user->tokenCan('products.delete')){
+            return response()->json([
+                'message' => 'Unauthorized'
+            ],403);
+        };
         Product::destroy($id);
         return [
             'message' => 'Product deleted successfully'
