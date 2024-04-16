@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProductrResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -11,7 +12,8 @@ class ProductsController extends Controller
 
     public function index(Request $request)
     {
-        return product::filter($request->query())->with('category:id,name','store:id,name','tags:id,name')->paginate();
+        $product = product::filter($request->query())->with('category:id,name','store:id,name','tags:id,name')->paginate();
+        return ProductrResource::collection($product);
     }
 
     public function store(Request $request)
@@ -31,7 +33,7 @@ class ProductsController extends Controller
 
     public function show(Product $product)
     {
-        return $product->load('category:id,name','store:id,name','tags:id,name');
+        return new ProductrResource($product);
     }
 
     public function update(Request $request, Product $product)
