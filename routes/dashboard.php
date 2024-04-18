@@ -3,12 +3,14 @@
 use App\Http\Controllers\Dashboard\CategoriesController;
 use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\ProfileController;
+use App\Http\Controllers\Dashboard\RolesController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Front\CheckoutController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
     'prefix' => 'admin/dashboard',
-    'middleware' => ['auth:admin']
+    'middleware' => ['auth:admin,web']
 ], function () {
     Route::get('profile',[ProfileController::class, 'edit'])->name('profile.edit');
 
@@ -23,10 +25,13 @@ Route::group([
     Route::delete('/categories/{category}/delete', [CategoriesController::class, 'forceDelete'])
         ->name('categories.force-delete');
 
-    Route::resource('/categories', CategoriesController::class);
+    Route::resources([
+        'categories' => CategoriesController::class,
+        'products' => ProductController::class,
+        'roles' => RolesController::class,
+    ]);
 
-    Route::resource('/products', ProductController::class);
-
+    Route::get('orders', [CheckoutController::class, 'index'])->name('orders.index');
 }
 );
 

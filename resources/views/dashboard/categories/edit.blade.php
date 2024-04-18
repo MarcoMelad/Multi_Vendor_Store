@@ -15,3 +15,4 @@
         @include('dashboard.categories.form')
     </form>
 @endsection
+

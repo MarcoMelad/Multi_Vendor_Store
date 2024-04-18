@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 use Mockery\Exception;
@@ -14,9 +15,8 @@ class CategoriesController extends Controller
 
     public function index()
     {
+        //Gate::authorize('category.view');
         $request = request();
-
-
         //$categories = Category::active()->paginate(5);
         //$categories = Category::status('archived')->paginate(5);
         $categories = Category::with('parent')/*leftJoin('categories as parents', 'parents.id', '=', 'categories.parent_id')
@@ -30,7 +30,7 @@ class CategoriesController extends Controller
             }
         ])
             ->filter($request->query())->paginate(10);
-        return view('dashboard.categories.index', compact('categories'));
+        return view('dashboard.categories.category_index', compact('categories'));
     }
 
 
@@ -43,6 +43,7 @@ class CategoriesController extends Controller
 
     public function create()
     {
+        Gate::authorize('categories.create');
         $parents = Category::all();
         return view('dashboard.categories.creat', compact('parents'));
     }
@@ -109,6 +110,7 @@ class CategoriesController extends Controller
 
     public function destroy(Category $category)
     {
+        Gate::authorize('category.delete');
         //Category::findOrFail($id)->delete();
         $category->delete();
         return redirect()->route('categories.index')->with('success', 'Category Deleted Successfully!');

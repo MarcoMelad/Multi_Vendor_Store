@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Rules\NameFilter;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 class CategoryRequest extends FormRequest
 {
@@ -14,7 +15,10 @@ class CategoryRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        if ($this->route('categories')) {
+           return Gate::allows('categories.update');
+        }
+        return Gate::allows('categories.create');
     }
 
     /**

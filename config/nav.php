@@ -8,22 +8,32 @@ return [
         'active' => 'dashboard'
     ],
     [
-        'icon' => 'fa fa-circle nav-icon',
+        'icon' => 'fas fa-tags nav-icon',
         'route' => 'categories.index',
         'title' => 'Categories',
         'badge' => 'new',
-        'active' => 'categories.*'
+        'active' => 'categories.*',
+        'ability' => 'categories.view',
     ],
     [
-        'icon' => 'nav-icon fas fa-tachometer-alt',
+        'icon' => 'fas fa-box nav-icon',
         'route' => 'products.index',
         'title' => 'Products',
-        'active' => 'products.*'
+        'active' => 'products.*',
+        'ability' => 'products.view',
     ],
     [
-        'icon' => 'nav-icon fas fa-tachometer-alt',
-        'route' => 'categories.index',
+        'icon' => 'fas fa-receipt nav-icon',
+        'route' => 'orders.index',
         'title' => 'Orders',
-        'active' => 'orders.*'
+        'active' => 'orders.*',
+        'ability' => 'orders.view',
+    ],
+    [
+        'icon' => 'fas fa-shield nav-icon',
+        'route' => 'roles.index',
+        'title' => 'Roles',
+        'active' => 'roles.*',
+        'ability' => 'roles.view',
     ],
 ];

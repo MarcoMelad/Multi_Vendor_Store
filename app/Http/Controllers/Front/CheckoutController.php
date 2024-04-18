@@ -11,10 +11,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Intl\Countries;
-use Throwable;
 
 class CheckoutController extends Controller
 {
+    public function index()
+    {
+        $orders = OrderItem::paginate(10);
+        return view('dashboard.orders.index', compact('orders'));
+    }
     public function create(CartRepositoryInterface $cart)
     {
         if ($cart->get()->count() == 0) {
@@ -67,7 +71,6 @@ class CheckoutController extends Controller
             return redirect()->route('home')->with('success', 'Order placed successfully');
         } catch (\Exception $exception) {
             DB::rollBack();
-            dd(event(new OrderCreated($order)));
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }

@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use App\Services\CurrencyConverter;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 
@@ -16,7 +19,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(CurrencyConverter::class,function (){
+            return new CurrencyConverter(config('services.currency_converter.api_key'));
+        });
     }
 
     /**
@@ -31,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
         validator::extend('filter', function ($attribute, $value, $parameters, $validator) {
             return !in_array(strtolower($value), $parameters);
         },'The value must be a valid string');
+
         Paginator::useBootstrap();
     }
 }
